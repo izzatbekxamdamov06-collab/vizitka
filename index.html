@@ -361,28 +361,25 @@
             }, 3200);
         }
 
-                                       document.addEventListener("DOMContentLoaded", () => {
+                            document.addEventListener("DOMContentLoaded", () => {
             const numDisplay = document.getElementById("visitorNum");
 
-            // Izzatbek uchun CounterAPI sozlamalari
+            // Izzatbek uchun yangi toza counter kalitlari
             const name = "izzatbek_portfolio_2026";
-            const key = "main_counter_v3";
+            const key = "live_counter_v1";
 
-            // CounterAPI.dev tizimining aniq to'g'ri /up (oshirish) formati
+            // CounterAPI.dev tizimidan sonni 1 taga oshirib olish
             fetch(`https://api.counterapi.dev/v1/${name}/${key}/up`)
                 .then(res => res.json())
                 .then(data => {
-                    // API dan kelgan sonni aniq tekshirib olish (data.count yoki data.value)
-                    let apiResult = data.count || data.value || 1;
-                    
-                    // Kelgan songa boshlang'ich sun'iy 20 raqamini qo'shamiz
-                    const YAKUNIY_SON = parseInt(apiResult) + 20; 
+                    // API dan kelgan aniq sonni olamiz (1 dan boshlanadi)
+                    const YAKUNIY_SON = parseInt(data.count || data.value || 1); 
                     globalVisitorNumber = YAKUNIY_SON;
 
-                    // Burchakdagi kichik datchikni qulflash
+                    // Burchakdagi kichik datchikni yangilash
                     document.getElementById("miniNum").textContent = YAKUNIY_SON;
 
-                    // Animatsiya boshlanish soni (maqsadga 10 ta qolganda boshlanadi)
+                    // Animatsiya boshlanish soni (agar son 10 dan kichik bo'lsa 0 dan boshlanadi)
                     let startNum = YAKUNIY_SON > 10 ? YAKUNIY_SON - 10 : 0;
                     
                     // Sanoq taymeri
@@ -390,26 +387,26 @@
                         startNum++;
                         numDisplay.textContent = startNum;
                         
-                        // 🛑 TAQA-TAQ TO'XTATISH: Maqsadga yetganda yoki adashib o'tib ketganda
-                        if (startNum >= YAKUNIY_SON || startNum > 5000) {
-                            clearInterval(counterInterval); // Taymerni butkul o'chirish
+                        // 🛑 TAQA-TAQ TO'XTATISH
+                        if (startNum >= YAKUNIY_SON) {
+                            clearInterval(counterInterval); // Taymerni o'chirish
                             numDisplay.textContent = YAKUNIY_SON; // Sonni yakuniy raqamga mixlash
                             
-                            // Silliq o'tish effekti bilan ism kiritish oynasini ochish
+                            // Ism kiritish oynasini ochish
                             setTimeout(() => {
                                 document.getElementById("counterPhase").style.display = "none";
                                 document.getElementById("nameFormZone").style.display = "block";
                                 document.getElementById("visitorNameInput").focus();
                             }, 500);
                         }
-                    }, 60); // Tezlik silliq aylanishi uchun 60ms qilindi
+                    }, 60);
                 })
                 .catch(err => {
-                    // Tarmoqda muammo bo'lsa zaxira varianti (Tizim qotib qolmaydi)
+                    // Tarmoqda muammo bo'lsa zaxira varianti
                     console.error("API xatoligi:", err);
-                    globalVisitorNumber = 21;
-                    numDisplay.textContent = 21;
-                    document.getElementById("miniNum").textContent = 21;
+                    globalVisitorNumber = 1;
+                    numDisplay.textContent = 1;
+                    document.getElementById("miniNum").textContent = 1;
                     document.getElementById("counterPhase").style.display = "none";
                     document.getElementById("nameFormZone").style.display = "block";
                 });
