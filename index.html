@@ -361,26 +361,28 @@
             }, 3200);
         }
 
-                document.addEventListener("DOMContentLoaded", () => {
+                        document.addEventListener("DOMContentLoaded", () => {
             const numDisplay = document.getElementById("visitorNum");
 
-            // GitHub username va loyiha nomi bilan xavfsiz kalit
-            const namespace = "izzatbekxamdamov06-collab";
-            const key = "vizitka-counter";
+            // Kalitlarni aniqlaymiz (Izzatbek uchun maxsus xavfsiz ID)
+            const namespace = "izzatbek_portfolio_2026";
+            const key = "main_counter";
 
-            // Internetdagi tekin bazadan ma'lumot olish va 1 taga oshirish
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+            // Hozirgi kunda aktiv va mutlaqo bepul yangi CounterAPI xizmati
+            fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
                 .then(res => res.json())
                 .then(data => {
-                    // Bazadagi songa boshlang'ich 20 ni majburlab qo'shib ketamiz
+                    // Bazadan kelgan haqiqiy global songa boshlang'ich 20 ni qo'shamiz
                     let currentVisitors = data.value + 20; 
                     globalVisitorNumber = currentVisitors;
 
                     // Burchakdagi datchikni yangilash
                     document.getElementById("miniNum").textContent = currentVisitors;
 
-                    // Silliq animatsiya bilan sonni aylantirish
-                    let startNum = currentVisitors > 50 ? currentVisitors - 50 : 0;
+                    // Silliq animatsiya effekti: 
+                    // Masalan raqam 21 bo'lsa, animatsiya 0 dan emas, balki 1 dan boshlanib 21 gacha aylanadi
+                    let startNum = currentVisitors > 20 ? currentVisitors - 20 : 0;
+                    
                     let counterInterval = setInterval(() => {
                         startNum++;
                         numDisplay.textContent = startNum;
@@ -393,13 +395,13 @@
                                 document.getElementById("visitorNameInput").focus();
                             }, 600);
                         }
-                    }, 30);
+                    }, 40); // Aylanish tezligi
                 })
                 .catch(err => {
-                    // Internetda uzilish bo'lsa zaxira varianti
-                    console.error("Xatolik:", err);
-                    globalVisitorNumber = 20;
-                    numDisplay.textContent = 20;
+                    // Agar internet mutlaqo bo'lmasa, sayt buzilmasligi uchun zaxira reja
+                    console.error("Baza bilan aloqa uzildi:", err);
+                    globalVisitorNumber = 21;
+                    numDisplay.textContent = 21;
                     document.getElementById("counterPhase").style.display = "none";
                     document.getElementById("nameFormZone").style.display = "block";
                 });
