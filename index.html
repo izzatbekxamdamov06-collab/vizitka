@@ -361,51 +361,55 @@
             }, 3200);
         }
 
-                                document.addEventListener("DOMContentLoaded", () => {
+                                       document.addEventListener("DOMContentLoaded", () => {
             const numDisplay = document.getElementById("visitorNum");
 
-            // Izzatbek uchun maxsus kalitlar
-            const namespace = "izzatbek_portfolio_2026";
-            const key = "main_counter_v2";
+            // Izzatbek uchun CounterAPI sozlamalari
+            const name = "izzatbek_portfolio_2026";
+            const key = "main_counter_v3";
 
-            // Bazadan faqat 1 marta ma'lumotni olamiz va sonni 1 taga oshiramiz
-            fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+            // CounterAPI.dev tizimining aniq to'g'ri /up (oshirish) formati
+            fetch(`https://api.counterapi.dev/v1/${name}/${key}/up`)
                 .then(res => res.json())
                 .then(data => {
-                    // Kelgan songa boshlang'ich 20 raqamini qo'shamiz
-                    // Masalan: bazada 1 bo'lsa, jami 21 bo'ladi.
-                    const YAKUNIY_SON = parseInt(data.value) + 20; 
+                    // API dan kelgan sonni aniq tekshirib olish (data.count yoki data.value)
+                    let apiResult = data.count || data.value || 1;
+                    
+                    // Kelgan songa boshlang'ich sun'iy 20 raqamini qo'shamiz
+                    const YAKUNIY_SON = parseInt(apiResult) + 20; 
                     globalVisitorNumber = YAKUNIY_SON;
 
-                    // Burchakdagi kichik datchikni qat'iy fikshirlash
+                    // Burchakdagi kichik datchikni qulflash
                     document.getElementById("miniNum").textContent = YAKUNIY_SON;
 
-                    // Animatsiya boshlanish nuqtasi (yakuniy sondan 15 ta oldingi son)
-                    let startNum = YAKUNIY_SON > 15 ? YAKUNIY_SON - 15 : 0;
+                    // Animatsiya boshlanish soni (maqsadga 10 ta qolganda boshlanadi)
+                    let startNum = YAKUNIY_SON > 10 ? YAKUNIY_SON - 10 : 0;
                     
-                    // Sanoqni boshlash
+                    // Sanoq taymeri
                     let counterInterval = setInterval(() => {
                         startNum++;
                         numDisplay.textContent = startNum;
                         
-                        // 🛑 QAT'IY TEKSHIRUV: Agar startNum yakuniy songa yetsa, darhol to'xtatish!
-                        if (startNum >= YAKUNIY_SON) {
-                            clearInterval(counterInterval); // Sanoqni butkul to'xtatish
+                        // 🛑 TAQA-TAQ TO'XTATISH: Maqsadga yetganda yoki adashib o'tib ketganda
+                        if (startNum >= YAKUNIY_SON || startNum > 5000) {
+                            clearInterval(counterInterval); // Taymerni butkul o'chirish
+                            numDisplay.textContent = YAKUNIY_SON; // Sonni yakuniy raqamga mixlash
                             
-                            // Ism kiritish oynasini ochish
+                            // Silliq o'tish effekti bilan ism kiritish oynasini ochish
                             setTimeout(() => {
                                 document.getElementById("counterPhase").style.display = "none";
                                 document.getElementById("nameFormZone").style.display = "block";
                                 document.getElementById("visitorNameInput").focus();
                             }, 500);
                         }
-                    }, 50); // Tezlik biroz sekinlashtirildi (silliq chiqishi uchun)
+                    }, 60); // Tezlik silliq aylanishi uchun 60ms qilindi
                 })
                 .catch(err => {
-                    // Agar internetda uzilish bo'lsa zaxira varianti
-                    console.error("Xatolik:", err);
+                    // Tarmoqda muammo bo'lsa zaxira varianti (Tizim qotib qolmaydi)
+                    console.error("API xatoligi:", err);
                     globalVisitorNumber = 21;
                     numDisplay.textContent = 21;
+                    document.getElementById("miniNum").textContent = 21;
                     document.getElementById("counterPhase").style.display = "none";
                     document.getElementById("nameFormZone").style.display = "block";
                 });
