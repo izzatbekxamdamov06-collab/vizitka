@@ -361,37 +361,48 @@
             }, 3200);
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            let currentVisitors = localStorage.getItem("v_count");
-            
-            if (!currentVisitors || parseInt(currentVisitors) > 5000) {
-                currentVisitors = 1; 
-            } else {
-                currentVisitors = parseInt(currentVisitors) + 1;
-            }
-            localStorage.setItem("v_count", currentVisitors);
-            globalVisitorNumber = currentVisitors;
-
+                document.addEventListener("DOMContentLoaded", () => {
             const numDisplay = document.getElementById("visitorNum");
-            let startNum = 0;
 
-            if (currentVisitors > 60) {
-                startNum = currentVisitors - 50;
-            }
+            // GitHub username va loyiha nomi bilan xavfsiz kalit
+            const namespace = "izzatbekxamdamov06-collab";
+            const key = "vizitka-counter";
 
-            let counterInterval = setInterval(() => {
-                startNum++;
-                numDisplay.textContent = startNum;
-                if (startNum >= currentVisitors) {
-                    clearInterval(counterInterval);
-                    
-                    setTimeout(() => {
-                        document.getElementById("counterPhase").style.display = "none";
-                        document.getElementById("nameFormZone").style.display = "block";
-                        document.getElementById("visitorNameInput").focus();
-                    }, 600);
-                }
-            }, 30);
+            // Internetdagi tekin bazadan ma'lumot olish va 1 taga oshirish
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(res => res.json())
+                .then(data => {
+                    // Bazadagi songa boshlang'ich 20 ni majburlab qo'shib ketamiz
+                    let currentVisitors = data.value + 20; 
+                    globalVisitorNumber = currentVisitors;
+
+                    // Burchakdagi datchikni yangilash
+                    document.getElementById("miniNum").textContent = currentVisitors;
+
+                    // Silliq animatsiya bilan sonni aylantirish
+                    let startNum = currentVisitors > 50 ? currentVisitors - 50 : 0;
+                    let counterInterval = setInterval(() => {
+                        startNum++;
+                        numDisplay.textContent = startNum;
+                        if (startNum >= currentVisitors) {
+                            clearInterval(counterInterval);
+                            
+                            setTimeout(() => {
+                                document.getElementById("counterPhase").style.display = "none";
+                                document.getElementById("nameFormZone").style.display = "block";
+                                document.getElementById("visitorNameInput").focus();
+                            }, 600);
+                        }
+                    }, 30);
+                })
+                .catch(err => {
+                    // Internetda uzilish bo'lsa zaxira varianti
+                    console.error("Xatolik:", err);
+                    globalVisitorNumber = 20;
+                    numDisplay.textContent = 20;
+                    document.getElementById("counterPhase").style.display = "none";
+                    document.getElementById("nameFormZone").style.display = "block";
+                });
         });
 
         function checkEnterKey(event) {
