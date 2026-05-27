@@ -361,45 +361,49 @@
             }, 3200);
         }
 
-                        document.addEventListener("DOMContentLoaded", () => {
+                                document.addEventListener("DOMContentLoaded", () => {
             const numDisplay = document.getElementById("visitorNum");
 
-            // Kalitlarni aniqlaymiz (Izzatbek uchun maxsus xavfsiz ID)
+            // Izzatbek uchun maxsus kalitlar
             const namespace = "izzatbek_portfolio_2026";
-            const key = "main_counter";
+            const key = "main_counter_v2";
 
-            // Hozirgi kunda aktiv va mutlaqo bepul yangi CounterAPI xizmati
+            // Bazadan faqat 1 marta ma'lumotni olamiz va sonni 1 taga oshiramiz
             fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
                 .then(res => res.json())
                 .then(data => {
-                    // Bazadan kelgan haqiqiy global songa boshlang'ich 20 ni qo'shamiz
-                    let currentVisitors = data.value + 20; 
-                    globalVisitorNumber = currentVisitors;
+                    // Kelgan songa boshlang'ich 20 raqamini qo'shamiz
+                    // Masalan: bazada 1 bo'lsa, jami 21 bo'ladi.
+                    const YAKUNIY_SON = parseInt(data.value) + 20; 
+                    globalVisitorNumber = YAKUNIY_SON;
 
-                    // Burchakdagi datchikni yangilash
-                    document.getElementById("miniNum").textContent = currentVisitors;
+                    // Burchakdagi kichik datchikni qat'iy fikshirlash
+                    document.getElementById("miniNum").textContent = YAKUNIY_SON;
 
-                    // Silliq animatsiya effekti: 
-                    // Masalan raqam 21 bo'lsa, animatsiya 0 dan emas, balki 1 dan boshlanib 21 gacha aylanadi
-                    let startNum = currentVisitors > 20 ? currentVisitors - 20 : 0;
+                    // Animatsiya boshlanish nuqtasi (yakuniy sondan 15 ta oldingi son)
+                    let startNum = YAKUNIY_SON > 15 ? YAKUNIY_SON - 15 : 0;
                     
+                    // Sanoqni boshlash
                     let counterInterval = setInterval(() => {
                         startNum++;
                         numDisplay.textContent = startNum;
-                        if (startNum >= currentVisitors) {
-                            clearInterval(counterInterval);
+                        
+                        // 🛑 QAT'IY TEKSHIRUV: Agar startNum yakuniy songa yetsa, darhol to'xtatish!
+                        if (startNum >= YAKUNIY_SON) {
+                            clearInterval(counterInterval); // Sanoqni butkul to'xtatish
                             
+                            // Ism kiritish oynasini ochish
                             setTimeout(() => {
                                 document.getElementById("counterPhase").style.display = "none";
                                 document.getElementById("nameFormZone").style.display = "block";
                                 document.getElementById("visitorNameInput").focus();
-                            }, 600);
+                            }, 500);
                         }
-                    }, 40); // Aylanish tezligi
+                    }, 50); // Tezlik biroz sekinlashtirildi (silliq chiqishi uchun)
                 })
                 .catch(err => {
-                    // Agar internet mutlaqo bo'lmasa, sayt buzilmasligi uchun zaxira reja
-                    console.error("Baza bilan aloqa uzildi:", err);
+                    // Agar internetda uzilish bo'lsa zaxira varianti
+                    console.error("Xatolik:", err);
                     globalVisitorNumber = 21;
                     numDisplay.textContent = 21;
                     document.getElementById("counterPhase").style.display = "none";
