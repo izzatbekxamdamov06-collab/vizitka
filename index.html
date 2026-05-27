@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izzatbek Xamdamov | Premium Liquid Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #040408;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 60px 20px;
+            overflow: hidden; 
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        /* Premium Shishasimon Karta */
+        .portfolio-card {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 36px;
+            padding: 40px 30px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin: auto;
+            animation: cardEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(60px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* 🌟 MEHMONLAR HISOBLAGICHI EFFEKTI */
+        .visitor-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 4, 8, 0.92);
+            backdrop-filter: blur(15px);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 1s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+        .visitor-liquid-box {
+            width: 360px;
+            height: 360px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.5);
+            animation: morphBall 4s infinite alternate ease-in-out;
+            transition: all 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+        @keyframes morphBall {
+            0% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+            100% { border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%; }
+        }
+        .visitor-liquid-box h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
+        .visitor-number { font-size: 50px; font-weight: 800; margin: 5px 0; }
+        .visitor-liquid-box p { font-size: 12.5px; font-weight: 500; line-height: 1.4; margin-bottom: 10px; }
+
+        /* ISM KIRITISH FORMASI STYLES */
+        .name-form-zone { display: none; width: 100%; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+        .visitor-input {
+            width: 85%; padding: 10px 14px; border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.2);
+            color: white; font-size: 13px; text-align: center; outline: none; margin-bottom: 12px; transition: 0.3s;
+        }
+        .visitor-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        .visitor-input:focus { border-color: white; background: rgba(0, 0, 0, 0.4); }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; width: 85%; }
+        .form-btn { padding: 8px 16px; border-radius: 10px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-submit { background: white; color: #6366f1; }
+        .btn-submit:hover { transform: scale(1.05); }
+        .btn-skip { background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-skip:hover { background: rgba(255, 255, 255, 0.25); }
+
+        /* XABAR YUBORISH MENYUSI STYLES */
+        .message-form-container {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .message-textarea {
+            width: 100%; height: 80px; background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
+            padding: 10px 12px; color: white; font-size: 13px;
+            resize: none; outline: none; transition: 0.3s; margin-bottom: 10px;
+        }
+        .message-textarea:focus { border-color: #6366f1; background: rgba(0, 0, 0, 0.4); }
+        .message-send-btn {
+            width: 100%; padding: 10px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border: none; border-radius: 12px; color: white; font-size: 12.5px; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s;
+        }
+        .message-send-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3); }
+
+        /* 🌟 YANGI: CHIROYLI NEON BILDIRISHNOMA (TOAST NOTIFICATION) STYLES */
+        .premium-toast {
+            position: fixed; top: -100px; right: 20px;
+            background: rgba(10, 10, 18, 0.85);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px; padding: 14px 22px;
+            display: flex; align-items: center; gap: 12px; color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.15);
+            z-index: 9999; pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .premium-toast.show { top: 20px; } /* Aktiv holati */
+        .premium-toast.toast-error { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.1); }
+        .premium-toast-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .toast-success .premium-toast-icon { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .toast-error .premium-toast-icon { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .premium-toast-content h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+        .premium-toast-content p { font-size: 11.5px; color: #94a3b8; }
+
+        /* Burchak datchigi */
+        .mini-counter {
+            position: fixed; bottom: 20px; right: -200px;
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08); padding: 8px 16px; border-radius: 14px;
+            color: #94a3b8; font-size: 12px; font-weight: 600; z-index: 10; display: flex; align-items: center; gap: 8px;
+            transition: right 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mini-counter i { color: #10b981; animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* Hayitlik bo'limi */
+        .hayitlik-wrapper { margin-bottom: 25px; text-align: right; }
+        .hayitlik-toggle-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            border: none; color: white; padding: 10px 20px; border-radius: 20px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 6px;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            animation: pulseGlow 2s infinite alternate; transition: 0.3s;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+            100% { transform: scale(1.05); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+        }
+        .card-box-hidden {
+            display: none; background: rgba(245, 158, 11, 0.06);
+            border: 1px dashed rgba(245, 158, 11, 0.3); border-radius: 20px;
+            padding: 18px; margin-bottom: 25px; text-align: center;
+            animation: fadeInBox 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-number { font-size: 19px; font-weight: 800; color: #f59e0b; letter-spacing: 1px; margin: 8px 0; }
+        .copy-text-btn { font-size: 12px; color: #94a3b8; cursor: pointer; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 4px 12px; border-radius: 10px; transition: 0.3s; }
+        .copy-text-btn:hover { background: #f59e0b; color: #040408; border-color: #f59e0b; }
+
+        /* LIQUID AVATAR EFFEKTI */
+        .liquid-avatar-zone { position: relative; width: 130px; height: 130px; margin: 0 auto 20px auto; filter: url('#liquid-gooey-filter'); background: transparent; }
+        .liquid-avatar-main { position: absolute; top: 20px; left: 20px; width: 90px; height: 90px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 3; }
+        .liquid-avatar-main i { font-size: 36px; color: white; }
+        .liquid-drop { position: absolute; background: #a855f7; border-radius: 50%; z-index: 2; top: 45px; left: 45px; animation: liquidFloat 7s infinite ease-in-out; }
+        .ld-1 { width: 38px; height: 38px; animation-delay: 0s; background: #6366f1; }
+        .ld-2 { width: 32px; height: 32px; animation-delay: -2.3s; background: #ec4899; }
+        .ld-3 { width: 42px; height: 42px; animation-delay: -4.6s; background: #a855f7; }
+        @keyframes liquidFloat {
+            0% { transform: rotate(0deg) translateX(55px) rotate(0deg); }
+            50% { transform: rotate(180deg) translateX(65px) rotate(-180deg) scale(1.2); }
+            100% { transform: rotate(360deg) translateX(55px) rotate(-360deg); }
+        }
+
+        .dev-name { font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .dev-profession { font-size: 13px; color: #818cf8; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .dev-bio { font-size: 14px; color: #94a3b8; line-height: 1.6; margin-bottom: 20px; padding: 0 5px; }
+        .stats-counter { display: flex; flex-direction: column; gap: 10px; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 18px; padding: 16px; margin-bottom: 25px; text-align: left; }
+        .info-row { display: flex; align-items: center; gap: 12px; font-size: 13.5px; color: #e2e8f0; }
+        .info-row i { color: #6366f1; width: 18px; text-align: center; font-size: 15px; }
+        .section-title { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; text-align: left; margin-bottom: 10px; font-weight: 700; }
+        .skills-container { display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+        .skill-badge { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; color: #e2e8f0; display: flex; align-items: center; gap: 6px; }
+        .links-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        .social-btn { display: flex; align-items: center; padding: 14px 16px; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px; text-decoration: none; color: #f8fafc; font-weight: 600; font-size: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .social-btn i.icon-left { font-size: 18px; margin-right: 12px; width: 24px; text-align: center; }
+        .social-btn i.icon-arrow { margin-left: auto; font-size: 12px; color: #475569; transition: transform 0.3s ease; }
+        .social-btn:hover { background: rgba(255, 255, 255, 0.03); border-color: #6366f1; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.12); }
+        .social-btn:hover i.icon-arrow { transform: translateX(4px); color: #6366f1; }
+        .social-btn.tg-premium { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border: none; }
+        .social-btn.tg-premium i.icon-arrow { color: #ffffff; }
+        .social-btn.project-btn { border-color: rgba(236, 72, 153, 0.3); background: rgba(236, 72, 153, 0.02); }
+        .social-btn.project-btn:hover { border-color: #ec4899; box-shadow: 0 10px 20px rgba(236, 72, 153, 0.15); }
+        .social-btn.project-btn:hover i.icon-arrow { color: #ec4899; }
+        .footer-note { margin-top: 25px; font-size: 11.5px; color: #475569; }
+    </style>
+</head>
+<body>
+
+    <div id="premiumToast" class="premium-toast toast-success">
+        <div class="premium-toast-icon">
+            <i id="toastIcon" class="fa-solid fa-check"></i>
+        </div>
+        <div class="premium-toast-content">
+            <h4 id="toastTitle">Muvaffaqiyatli!</h4>
+            <p id="toastMessage">Xabaringiz Izzatbekka yetkazildi.</p>
+        </div>
+    </div>
+
+    <div class="visitor-overlay" id="visitorOverlay">
+        <div class="visitor-liquid-box" id="visitorBox">
+            <div id="counterPhase">
+                <h2>Xush kelibsiz!</h2>
+                <div class="visitor-number" id="visitorNum">0</div>
+                <p>Siz portfoliomizga tashrif buyurgan muazzam mehmonsiz! ✨</p>
+            </div>
+            
+            <div class="name-form-zone" id="nameFormZone">
+                <p style="font-size:12px; margin-bottom:10px;">Kim kirganini Izzatbekka bildirmoqchi bo‘lsangiz ismingizni kiriting:</p>
+                <input type="text" id="visitorNameInput" class="visitor-input" placeholder="Ismingiz (majburiy emas)..." onkeydown="checkEnterKey(event)">
+                <div class="btn-group">
+                    <button class="form-btn btn-submit" onclick="submitName()">Jo‘natish</button>
+                    <button class="form-btn btn-skip" onclick="closeLiquidBall()">Kerak emas</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mini-counter" id="miniCounter">
+        <i class="fa-solid fa-circle"></i> ID: Mehmon #<span id="miniNum">0</span>
+    </div>
+
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="portfolio-card">
+        <div class="hayitlik-wrapper">
+            <button class="hayitlik-toggle-btn" onclick="toggleHayitlik()">
+                <i class="fa-solid fa-gift"></i> Hayitlik uchun 🌙
+            </button>
+        </div>
+        <div id="hayitlikBox" class="card-box-hidden">
+            <p style="font-size: 12.5px; color: #cbd5e1; margin-bottom: 4px;">Bayram muborak! Hayitlik ulashish uchun:</p>
+            <div class="card-number">5614 6887 0140 1209</div>
+            <button class="copy-text-btn" onclick="copyCard()">Karta raqamini nusxalash</button>
+        </div>
+        
+        <div class="liquid-avatar-zone">
+            <div class="liquid-avatar-main">
+                <i class="fa-solid fa-user-astronaut"></i>
+            </div>
+            <div class="liquid-drop ld-1"></div>
+            <div class="liquid-drop ld-2"></div>
+            <div class="liquid-drop ld-3"></div>
+        </div>
+
+        <div class="dev-name">Izzatbek Xamdamov</div>
+        <div class="dev-profession">Creative Web Developer</div>
+        <div class="dev-bio">Zamonaviy frontend texnologiyalari va mukammal matematik effektlar yordamida eng yuqori darajadagi interaktiv raqamli tizimlar yaratuvchisi.</div>
+
+        <div class="stats-counter">
+            <div class="info-row"><i class="fa-solid fa-graduation-cap"></i><span>Qarshi davlat universiteti, Iqtisodiyot (2-kurs)</span></div>
+            <div class="info-row"><i class="fa-solid fa-cake-candles"></i><span>Tug‘ilgan sana: 18.06.2006 yil</span></div>
+        </div>
+
+        <div class="section-title">Dasturlash ko‘nikmalari</div>
+        <div class="skills-container">
+            <div class="skill-badge"><i class="fa-brands fa-html5" style="color: #e34c26;"></i> HTML5</div>
+            <div class="skill-badge"><i class="fa-brands fa-css3-alt" style="color: #264de4;"></i> CSS3</div>
+            <div class="skill-badge"><i class="fa-brands fa-js" style="color: #f7df1e;"></i> JavaScript (ES6+)</div>
+            <div class="skill-badge"><i class="fa-solid fa-cubes" style="color: #06b6d4;"></i> Canvas API</div>
+            <div class="skill-badge"><i class="fa-solid fa-wand-magic-sparkles" style="color: #ec4899;"></i> SVG Filter FX</div>
+        </div>
+
+        <div class="section-title">Menga xabar qoldiring</div>
+        <div class="message-form-container">
+            <textarea id="userDirectMessage" class="message-textarea" placeholder="Xabaringiz yoki taklifingizni shu yerga yozing..."></textarea>
+            <button class="message-send-btn" onclick="sendDirectMessage()">
+                <i class="fa-solid fa-paper-plane"></i> Xabarni yuborish
+            </button>
+        </div>
+
+        <div class="section-title">Loyihalar va Aloqa</div>
+        <div class="links-wrapper">
+            <a href="https://t.me/EcoCourse2" target="_blank" class="social-btn tg-premium"><i class="fa-brands fa-telegram icon-left"></i><span>Rasmiy Telegram Kanalim</span><i class="fa-solid fa-arrow-right icon-arrow"></i></a>
+            <a href="https://izzatbekxamdamov06-collab.github.io/MOLIYA-SESSIYA-TEST/" target="_blank" class="social-btn project-btn"><i class="fa-solid fa-graduation-cap icon-left" style="color: #ec4899;"></i><span>Moliya Sessiya Test Platformasi</span><i class="fa-solid fa-arrow-right icon-arrow"></i></a>
+            <a href="tel:+998906770656" class="social-btn"><i class="fa-solid fa-phone-volume icon-left" style="color: #10b981;"></i><span>+998 (90) 677-06-56</span><i class="fa-solid fa-arrow-right icon-arrow"></i></a>
+        </div>
+        <div class="footer-note">Ekranning bo‘sh joyiga bosib yulduzlarni portlatishingiz mumkin ✨</div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display: none;">
+        <defs>
+            <filter id="liquid-gooey-filter">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -9" result="gooey" />
+                <feBlend in="SourceGraphic" in2="gooey" />
+            </filter>
+        </defs>
+    </svg>
+
+    <script>
+        const BOT_TOKEN = "8808033203:AAHm36znXkH7lyNL2IeWeXzuey-pAnZeQdU";
+        const CHAT_ID = "836774866";
+        let globalVisitorNumber = 0;
+        let savedVisitorName = "Anonim Mehmon";
+
+        // 🌟 ULTRA PREMIUM TOAST BILDIRISHNOMA FUNKSIYASI
+        function showPremiumToast(title, message, type = 'success') {
+            const toast = document.getElementById("premiumToast");
+            const icon = document.getElementById("toastIcon");
+            const tTitle = document.getElementById("toastTitle");
+            const tMsg = document.getElementById("toastMessage");
+
+            // Turiga qarab rang va ikonkalarini moslashtirish
+            if (type === 'success') {
+                toast.className = "premium-toast toast-success show";
+                icon.className = "fa-solid fa-circle-check";
+            } else {
+                toast.className = "premium-toast toast-error show";
+                icon.className = "fa-solid fa-circle-exclamation";
+            }
+
+            tTitle.textContent = title;
+            tMsg.textContent = message;
+
+            // 3 soniyadan keyin oynani bekitish
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3200);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            let currentVisitors = localStorage.getItem("v_count");
+            
+            if (!currentVisitors || parseInt(currentVisitors) > 5000) {
+                currentVisitors = 1; 
+            } else {
+                currentVisitors = parseInt(currentVisitors) + 1;
+            }
+            localStorage.setItem("v_count", currentVisitors);
+            globalVisitorNumber = currentVisitors;
+
+            const numDisplay = document.getElementById("visitorNum");
+            let startNum = 0;
+
+            if (currentVisitors > 60) {
+                startNum = currentVisitors - 50;
+            }
+
+            let counterInterval = setInterval(() => {
+                startNum++;
+                numDisplay.textContent = startNum;
+                if (startNum >= currentVisitors) {
+                    clearInterval(counterInterval);
+                    
+                    setTimeout(() => {
+                        document.getElementById("counterPhase").style.display = "none";
+                        document.getElementById("nameFormZone").style.display = "block";
+                        document.getElementById("visitorNameInput").focus();
+                    }, 600);
+                }
+            }, 30);
+        });
+
+        function checkEnterKey(event) {
+            if (event.key === "Enter") {
+                submitName();
+            }
+        }
+
+        function submitName() {
+            const name = document.getElementById("visitorNameInput").value.trim();
+            if(name === "") {
+                showPremiumToast("Ogohlantirish", "Iltimos, ismingizni kiritib ko'ring.", "error");
+                return;
+            }
+
+            savedVisitorName = name;
+            
+            const message = `🔔 Saytda Yangi Mehmon!\n👤 Ismi: ${name}\n🔢 Mehmon raqami: #${globalVisitorNumber}`;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+            fetch(url).catch(err => console.error(err));
+
+            document.getElementById("nameFormZone").innerHTML = `<p style="font-size:15px; font-weight:700;">Tashrifingiz uchun rahmat, ${name}! 🤝</p>`;
+            
+            setTimeout(() => {
+                closeLiquidBall();
+                showPremiumToast("Tashrif qayd etildi", `Xush kelibsiz, ${name}! ✨`, "success");
+            }, 1400);
+        }
+
+        function closeLiquidBall() {
+            const overlay = document.getElementById("visitorOverlay");
+            const box = document.getElementById("visitorBox");
+            const mini = document.getElementById("miniCounter");
+            document.getElementById("miniNum").textContent = globalVisitorNumber;
+
+            box.style.transform = "scale(0.02) translate(3000px, 3000px)";
+            box.style.opacity = "0";
+            overlay.style.opacity = "0";
+            
+            document.body.style.overflow = "auto";
+            document.documentElement.style.overflow = "auto";
+            
+            setTimeout(() => {
+                overlay.style.display = "none";
+                mini.style.right = "20px"; 
+            }, 800);
+        }
+
+        // DIRECT XABAR YUBORISH FUNKSIYASI
+        function sendDirectMessage() {
+            const msgArea = document.getElementById("userDirectMessage");
+            const userMsg = msgArea.value.trim();
+
+            if (userMsg === "") {
+                showPremiumToast("Xatolik", "Bo'sh xabarni yuborib bo'lmaydi...", "error");
+                return;
+            }
+
+            const fullTelegramMessage = `✉️ Yangi Shaxsiy Xabar!\n\n👤 Yuboruvchi: ${savedVisitorName} (#${globalVisitorNumber})\n📝 Xabar:\n"${userMsg}"`;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(fullTelegramMessage)}`;
+
+            fetch(url)
+            .then(res => {
+                // 🌟 JONLI OGOHLANTIRISH EFFEKTI CHAQIRILADI
+                showPremiumToast("Muvaffaqiyatli", "Xabaringiz Izzatbekka yuborildi! 🚀", "success");
+                msgArea.value = ""; 
+            })
+            .catch(err => {
+                showPremiumToast("Xatolik", "Internet aloqasini tekshiring.", "error");
+                console.error(err);
+            });
+        }
+
+        function toggleHayitlik() {
+            const box = document.getElementById('hayitlikBox');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function copyCard() {
+            const cardNum = "5614688701401209";
+            navigator.clipboard.writeText(cardNum).then(() => {
+                showPremiumToast("Nusxalandi", "Karta raqami olindi. Rahmat! 🌙", "success");
+            });
+        }
+
+        // --- CANVAS PARTICLES SYSTEM ---
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+
+        let particlesArray = [];
+        const maxParticles = 110;
+        const mouse = { x: null, y: null, radius: 150 }
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+        class Particle {
+            constructor(x, y, dx, dy, size, color) { this.x = x; this.y = y; this.dx = dx; this.dy = dy; this.size = size; this.color = color; }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = this.color; ctx.shadowBlur = 6; ctx.shadowColor = this.color; ctx.fill(); }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+                if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+                let gapX = mouse.x - this.x; let gapY = mouse.y - this.y;
+                let currentDistance = Math.sqrt(gapX * gapX + gapY * gapY);
+                if (currentDistance < mouse.radius) {
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 2.5;
+                    if (mouse.x > this.x && this.x > this.size * 10) this.x -= 2.5;
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 2.5;
+                    if (mouse.y > this.y && this.y > this.size * 10) this.y -= 2.5;
+                }
+                this.x += this.dx; this.y += this.dy; this.draw();
+            }
+        }
+
+        function initMatrix() {
+            particlesArray = [];
+            let bgPalette = ['#6366f1', '#a855f7', '#ec4899', '#06b6d4', '#10b981', '#f59e0b'];
+            for (let i = 0; i < maxParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = Math.random() * (canvas.width - size * 4) + size * 2;
+                let y = Math.random() * (canvas.height - size * 4) + size * 2;
+                let dx = (Math.random() * 1.2) - 0.6; let dy = (Math.random() * 1.2) - 0.6;
+                particlesArray.push(new Particle(x, y, dx, dy, size, bgPalette[Math.floor(Math.random() * bgPalette.length)]));
+            }
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.closest('.portfolio-card') || e.target.closest('.form-btn') || document.getElementById("visitorOverlay").style.display !== "none") return;
+            
+            let customRainbowPalette = [
+                '#22d3ee', '#38bdf8', '#f472b6', '#a855f7', '#10b981', '#f59e0b',
+                '#ef4444', '#f43f5e', '#06b6d4', '#e11d48', '#22c55e', '#eab308'
+            ];
+
+            for (let i = 0; i < 45; i++) { 
+                let size = (Math.random() * 3.5) + 1.5;
+                let dx = (Math.random() * 6) - 3; 
+                let dy = (Math.random() * 6) - 3;
+                let randomColor = customRainbowPalette[Math.floor(Math.random() * customRainbowPalette.length)];
+                
+                particlesArray.push(new Particle(e.clientX, e.clientY, dx, dy, size, randomColor));
+                if (particlesArray.length > 250) particlesArray.shift();
+            }
+        });
+
+        function loop() { requestAnimationFrame(loop); ctx.fillStyle = 'rgba(4, 4, 8, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.shadowBlur = 0; for (let i = 0; i < particlesArray.length; i++) particlesArray[i].update(); }
+        initMatrix(); loop();
+    </script>
+</body>
+</html>
